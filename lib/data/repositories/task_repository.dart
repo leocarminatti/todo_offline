@@ -1,3 +1,5 @@
+import 'package:fpdart/fpdart.dart' as fpdart;
+
 import '../../domain/domain.dart';
 import '../data.dart';
 
@@ -7,12 +9,51 @@ class TaskRepository implements ITaskRepository {
   TaskRepository(this._taskService);
 
   @override
-  Future<void> addTask(TaskModel task) => _taskService.addTask(task);
+  Future<fpdart.Either<String, bool>> addTask(Task task) async {
+    try {
+      final taskModel = TaskModel.fromEntity(task);
+      await _taskService.addTask(taskModel);
+      return fpdart.right(true);
+    } catch (e) {
+      return fpdart.left('Erro ao adicionar a tarefa: $e');
+    }
+  }
 
   @override
-  Future<void> deleteTask(String taskId) => _taskService.deleteTask(taskId);
+  Future<fpdart.Either<String, void>> deleteTask(String taskId) async {
+    try {
+      await _taskService.deleteTask(taskId);
+      return fpdart.right(null);
+    } catch (e) {
+      return fpdart.left('Erro ao deletar a tarefa: $e');
+    }
+  }
 
   @override
-  Future<List<TaskModel>> getTasks({bool onlyCompleted = false}) =>
-      _taskService.getTasks(onlyCompleted: onlyCompleted);
+  Future<fpdart.Either<String, List<Task>>> getTasks(
+      {bool onlyCompleted = false}) async {
+    try {
+      final taskModels =
+          await _taskService.getTasks(onlyCompleted: onlyCompleted);
+      return fpdart
+          .right(taskModels.map((taskModel) => taskModel.toEntity()).toList());
+    } catch (e) {
+      return fpdart.left('Erro ao buscar as tarefas: $e');
+    }
+  }
+
+  @override
+  Future<fpdart.Either<String, List<Task>>> searchTasks(String query) async {
+    try {
+      final taskModels = await _taskService.getTasks();
+      final filteredTasks = taskModels
+          .where(
+              (task) => task.title.toLowerCase().contains(query.toLowerCase()))
+          .map((taskModel) => taskModel.toEntity())
+          .toList();
+      return fpdart.right(filteredTasks);
+    } catch (e) {
+      return fpdart.left('Erro ao pesquisar tarefas: $e');
+    }
+  }
 }

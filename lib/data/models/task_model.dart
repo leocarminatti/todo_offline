@@ -1,4 +1,5 @@
 import 'package:hive/hive.dart';
+import 'package:todo_offline/domain/domain.dart';
 
 part 'task_model.g.dart';
 
@@ -22,4 +23,22 @@ class TaskModel extends HiveObject {
     required this.description,
     this.isChecked = false,
   });
+
+  Task toEntity() {
+    return Task(
+      id: id,
+      title: title,
+      description: description,
+      isChecked: isChecked,
+    );
+  }
+
+  factory TaskModel.fromEntity(Task task) {
+    return TaskModel(
+      id: task.id,
+      title: task.title,
+      description: task.description,
+      isChecked: task.isChecked,
+    );
+  }
 }
