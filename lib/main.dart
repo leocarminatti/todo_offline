@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
+import 'configs/configs.dart';
 import 'routes/routes.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  setupDependencies();
+
   await Hive.initFlutter();
+  HiveAdapters.registerAdapters();
 
   runApp(const MyApp());
 }
