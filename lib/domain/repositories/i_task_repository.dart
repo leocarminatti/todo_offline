@@ -8,4 +8,5 @@ abstract class ITaskRepository {
   Future<fpdart.Either<String, List<Task>>> getTasks(
       {bool onlyCompleted = false});
   Future<fpdart.Either<String, List<Task>>> searchTasks(String query);
+  Future<fpdart.Either<String, bool>> toggleTaskStatus(Task task);
 }
