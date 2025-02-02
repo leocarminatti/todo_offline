@@ -56,4 +56,13 @@ class TaskRepository implements ITaskRepository {
       return fpdart.left('Erro ao pesquisar tarefas: $e');
     }
   }
+
+  @override
+  Future<fpdart.Either<String, bool>> toggleTaskStatus(Task task) async {
+    try {
+      return await addTask(task);
+    } catch (e) {
+      return fpdart.left("Erro ao atualizar status da tarefa: $e");
+    }
+  }
 }

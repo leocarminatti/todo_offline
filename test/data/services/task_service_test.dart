@@ -18,7 +18,7 @@ void main() {
 
   setUp(() async {
     mockHiveBox = MockHiveBox();
-    taskService = TaskService(box: mockHiveBox);
+    taskService = TaskService(mockHiveBox);
 
     PathProviderPlatform.instance = FakePathProviderPlatform();
 
